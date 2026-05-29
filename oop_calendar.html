@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Out of Office – May/June 2026</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f0f4f8;
+      color: #333;
+      padding: 30px 20px;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 1.8rem;
+      margin-bottom: 6px;
+      color: #1a3c6e;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #666;
+      font-size: 0.95rem;
+      margin-bottom: 30px;
+    }
+
+    /* ── Legend ── */
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 14px;
+      margin-bottom: 32px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 0.88rem;
+    }
+
+    .legend-dot {
+      width: 18px;
+      height: 18px;
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+
+    /* ── Calendar grid ── */
+    .calendars {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 30px;
+    }
+
+    .calendar {
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 4px 18px rgba(0,0,0,.10);
+      overflow: hidden;
+      min-width: 320px;
+    }
+
+    .cal-header {
+      background: #1a3c6e;
+      color: #fff;
+      text-align: center;
+      padding: 14px 0;
+      font-size: 1.1rem;
+      font-weight: 600;
+      letter-spacing: .5px;
+    }
+
+    .cal-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      padding: 10px 10px 16px;
+      gap: 4px;
+    }
+
+    .day-name {
+      text-align: center;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #888;
+      padding: 6px 0;
+      text-transform: uppercase;
+    }
+
+    .day {
+      text-align: center;
+      border-radius: 8px;
+      padding: 10px 4px 8px;
+      font-size: 0.92rem;
+      line-height: 1;
+      min-height: 54px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 3px;
+    }
+
+    .day .num {
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .day .label {
+      font-size: 0.58rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .3px;
+      line-height: 1.2;
+      text-align: center;
+    }
+
+    .empty { background: transparent; }
+
+    /* Status colours */
+    .weekend {
+      background: #f0f0f0;
+      color: #999;
+    }
+
+    .holiday {
+      background: #fff3cd;
+      color: #7a5800;
+    }
+    .holiday .num { color: #7a5800; }
+
+    .comp-leave {
+      background: #d4edda;
+      color: #1a5c2e;
+    }
+    .comp-leave .num { color: #1a5c2e; }
+
+    .annual-leave {
+      background: #cce5ff;
+      color: #0055aa;
+    }
+    .annual-leave .num { color: #0055aa; }
+
+    .workday {
+      background: #fafafa;
+      color: #444;
+    }
+
+    /* Summary banner */
+    .summary {
+      max-width: 700px;
+      margin: 30px auto 0;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 14px rgba(0,0,0,.09);
+      padding: 20px 28px;
+    }
+
+    .summary h2 {
+      font-size: 1rem;
+      color: #1a3c6e;
+      margin-bottom: 12px;
+      border-bottom: 2px solid #e8edf3;
+      padding-bottom: 6px;
+    }
+
+    .summary table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+
+    .summary td {
+      padding: 7px 10px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .summary td:first-child { font-weight: 600; color: #555; width: 200px; }
+
+    .badge {
+      display: inline-block;
+      border-radius: 5px;
+      padding: 2px 8px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .badge-weekend  { background:#f0f0f0; color:#888; }
+    .badge-holiday  { background:#fff3cd; color:#7a5800; }
+    .badge-comp     { background:#d4edda; color:#1a5c2e; }
+    .badge-annual   { background:#cce5ff; color:#0055aa; }
+
+    /* ── Coverage card ── */
+    .coverage {
+      max-width: 700px;
+      margin: 20px auto 0;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 14px rgba(0,0,0,.09);
+      overflow: hidden;
+    }
+
+    .coverage-header {
+      background: #2d6a4f;
+      color: #fff;
+      padding: 13px 24px;
+      font-size: 1rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .coverage-body {
+      padding: 18px 24px 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .coverage-person {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      border-radius: 10px;
+      padding: 14px 16px;
+      border: 1.5px solid #e0e0e0;
+    }
+
+    .coverage-person.primary { border-color: #a3cfbb; background: #f3fbf7; }
+    .coverage-person.escalation { border-color: #f5c6c6; background: #fff7f7; }
+
+    .avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    .avatar.green { background: #d4edda; }
+    .avatar.red   { background: #fce4e4; }
+
+    .person-info { flex: 1; }
+
+    .person-name {
+      font-weight: 700;
+      font-size: 0.97rem;
+      color: #222;
+      margin-bottom: 2px;
+    }
+
+    .person-role {
+      font-size: 0.78rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .4px;
+      margin-bottom: 5px;
+    }
+
+    .role-primary    { color: #2d6a4f; }
+    .role-escalation { color: #c0392b; }
+
+    .person-scope {
+      font-size: 0.85rem;
+      color: #555;
+      margin-bottom: 5px;
+    }
+
+    .person-email a {
+      font-size: 0.83rem;
+      color: #1a6eb5;
+      text-decoration: none;
+    }
+    .person-email a:hover { text-decoration: underline; }
+
+    .notice-bar {
+      background: #fff8e1;
+      border: 1.5px solid #ffe082;
+      border-radius: 8px;
+      padding: 10px 16px;
+      font-size: 0.86rem;
+      color: #7a5800;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>🏖️ Out of Office Schedule</h1>
+<p class="subtitle">May – June 2026 &nbsp;|&nbsp; Total OOP stretch: <strong>30 May – 8 June (10 days)</strong></p>
+
+<!-- Legend -->
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:#f0f0f0"></div> Weekend</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#fff3cd"></div> Observed Replacement Holiday</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#d4edda"></div> Comp Leave</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#cce5ff"></div> Annual Leave</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#fafafa; border:1px solid #ddd"></div> Working Day</div>
+</div>
+
+<!-- Calendars -->
+<div class="calendars">
+
+  <!-- MAY 2026 -->
+  <!-- May 1 = Friday -->
+  <div class="calendar">
+    <div class="cal-header">May 2026</div>
+    <div class="cal-grid">
+      <div class="day-name">Mon</div><div class="day-name">Tue</div><div class="day-name">Wed</div>
+      <div class="day-name">Thu</div><div class="day-name">Fri</div><div class="day-name">Sat</div><div class="day-name">Sun</div>
+
+      <!-- Week 1: empty Mon–Thu, then Fri 1, Sat 2, Sun 3 -->
+      <div class="day empty"></div><div class="day empty"></div><div class="day empty"></div><div class="day empty"></div>
+      <div class="day workday"><span class="num">1</span></div>
+      <div class="day weekend"><span class="num">2</span></div>
+      <div class="day weekend"><span class="num">3</span></div>
+
+      <!-- Week 2: 4–10 -->
+      <div class="day workday"><span class="num">4</span></div>
+      <div class="day workday"><span class="num">5</span></div>
+      <div class="day workday"><span class="num">6</span></div>
+      <div class="day workday"><span class="num">7</span></div>
+      <div class="day workday"><span class="num">8</span></div>
+      <div class="day weekend"><span class="num">9</span></div>
+      <div class="day weekend"><span class="num">10</span></div>
+
+      <!-- Week 3: 11–17 -->
+      <div class="day workday"><span class="num">11</span></div>
+      <div class="day workday"><span class="num">12</span></div>
+      <div class="day workday"><span class="num">13</span></div>
+      <div class="day workday"><span class="num">14</span></div>
+      <div class="day workday"><span class="num">15</span></div>
+      <div class="day weekend"><span class="num">16</span></div>
+      <div class="day weekend"><span class="num">17</span></div>
+
+      <!-- Week 4: 18–24 -->
+      <div class="day workday"><span class="num">18</span></div>
+      <div class="day workday"><span class="num">19</span></div>
+      <div class="day workday"><span class="num">20</span></div>
+      <div class="day workday"><span class="num">21</span></div>
+      <div class="day workday"><span class="num">22</span></div>
+      <div class="day weekend"><span class="num">23</span></div>
+      <div class="day weekend"><span class="num">24</span></div>
+
+      <!-- Week 5: 25–31 -->
+      <div class="day workday"><span class="num">25</span></div>
+      <div class="day workday"><span class="num">26</span></div>
+      <div class="day workday"><span class="num">27</span></div>
+      <div class="day workday"><span class="num">28</span></div>
+      <div class="day workday"><span class="num">29</span></div>
+      <div class="day weekend"><span class="num">30</span><span class="label">Weekend</span></div>
+      <div class="day weekend"><span class="num">31</span><span class="label">Weekend</span></div>
+    </div>
+  </div>
+
+  <!-- JUNE 2026 -->
+  <!-- June 1 = Monday -->
+  <div class="calendar">
+    <div class="cal-header">June 2026</div>
+    <div class="cal-grid">
+      <div class="day-name">Mon</div><div class="day-name">Tue</div><div class="day-name">Wed</div>
+      <div class="day-name">Thu</div><div class="day-name">Fri</div><div class="day-name">Sat</div><div class="day-name">Sun</div>
+
+      <!-- Week 1: 1–7 -->
+      <div class="day holiday"><span class="num">1</span><span class="label">Obs. Holiday</span></div>
+      <div class="day holiday"><span class="num">2</span><span class="label">Obs. Holiday</span></div>
+      <div class="day comp-leave"><span class="num">3</span><span class="label">Comp Leave</span></div>
+      <div class="day comp-leave"><span class="num">4</span><span class="label">Comp Leave</span></div>
+      <div class="day comp-leave"><span class="num">5</span><span class="label">Comp Leave</span></div>
+      <div class="day weekend"><span class="num">6</span><span class="label">Weekend</span></div>
+      <div class="day weekend"><span class="num">7</span><span class="label">Weekend</span></div>
+
+      <!-- Week 2: 8–14 -->
+      <div class="day annual-leave"><span class="num">8</span><span class="label">Annual Leave</span></div>
+      <div class="day workday"><span class="num">9</span></div>
+      <div class="day workday"><span class="num">10</span></div>
+      <div class="day workday"><span class="num">11</span></div>
+      <div class="day workday"><span class="num">12</span></div>
+      <div class="day weekend"><span class="num">13</span></div>
+      <div class="day weekend"><span class="num">14</span></div>
+
+      <!-- Week 3: 15–21 -->
+      <div class="day workday"><span class="num">15</span></div>
+      <div class="day workday"><span class="num">16</span></div>
+      <div class="day workday"><span class="num">17</span></div>
+      <div class="day workday"><span class="num">18</span></div>
+      <div class="day workday"><span class="num">19</span></div>
+      <div class="day weekend"><span class="num">20</span></div>
+      <div class="day weekend"><span class="num">21</span></div>
+
+      <!-- Week 4: 22–28 -->
+      <div class="day workday"><span class="num">22</span></div>
+      <div class="day workday"><span class="num">23</span></div>
+      <div class="day workday"><span class="num">24</span></div>
+      <div class="day workday"><span class="num">25</span></div>
+      <div class="day workday"><span class="num">26</span></div>
+      <div class="day weekend"><span class="num">27</span></div>
+      <div class="day weekend"><span class="num">28</span></div>
+
+      <!-- Week 5: 29–30 -->
+      <div class="day workday"><span class="num">29</span></div>
+      <div class="day workday"><span class="num">30</span></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Summary table -->
+<div class="summary">
+  <h2>📋 OOP Breakdown</h2>
+  <table>
+    <tr>
+      <td>30 – 31 May</td>
+      <td><span class="badge badge-weekend">Weekend</span></td>
+    </tr>
+    <tr>
+      <td>1 – 2 June</td>
+      <td><span class="badge badge-holiday">Observed Replacement Holiday</span></td>
+    </tr>
+    <tr>
+      <td>3 – 5 June</td>
+      <td><span class="badge badge-comp">Comp Leave</span></td>
+    </tr>
+    <tr>
+      <td>6 – 7 June</td>
+      <td><span class="badge badge-weekend">Weekend</span></td>
+    </tr>
+    <tr>
+      <td>8 June</td>
+      <td><span class="badge badge-annual">Annual Leave</span></td>
+    </tr>
+  </table>
+
+  <!-- Note specific to OOP days -->
+  <div class="notice-bar" style="margin-top:16px;">
+    💬 <span><strong>During 1 – 8 June (OOP days):</strong> Reachable via Teams, but no access to laptop.</span>
+  </div>
+</div>
+
+<!-- Coverage card -->
+<div class="coverage">
+  <div class="coverage-header">👥 Coverage During OOP (1 – 8 June)</div>
+  <div class="coverage-body">
+
+    <div class="coverage-person primary">
+      <div class="avatar green">🧑‍💻</div>
+      <div class="person-info">
+        <div class="person-name">Leo Wei Leong Wong</div>
+        <div class="person-role role-primary">Primary Coverage</div>
+        <div class="person-scope">📌 Full Chip MCA</div>
+        <div class="person-email"><a href="mailto:leo.wei.leong.wong@intel.com">leo.wei.leong.wong@intel.com</a></div>
+      </div>
+    </div>
+
+    <div class="coverage-person escalation">
+      <div class="avatar red">📢</div>
+      <div class="person-info">
+        <div class="person-name">Hua Zit Ong</div>
+        <div class="person-role role-escalation">Coverage</div>
+        <div class="person-scope">📌 Beacon Crashlog &amp; other matters</div>
+        <div class="person-email"><a href="mailto:hua.zit.ong@intel.com">hua.zit.ong@intel.com</a></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>
